@@ -13,44 +13,53 @@
 
 #include <gl/glext.h>
 #include <gl/wglext.h>
+#include <queue>
 
+#include <core/events/Event.h>
+namespace Ætherium {
+	using namespace Debug;
 
-
-class Graphics
-{
-public:
-	Graphics();
-	~Graphics();
+	class Graphics
+	{
+	public:
+		Graphics(std::queue<Event*>* events);
+		~Graphics();
 	
-	// CREATION
-	bool CreateDevice(Config* cfg);
+		// CREATION
+		bool CreateDevice(Config* cfg);
 
-	bool CreateContext(HDC hDC);
+		bool CreateContext(HDC hDC);
+		bool SetSwapInterval(int interval);
+		bool MakeContextCurrent();
+		bool DestroyProxyContext();
+
+		bool InitilizeScene();
+		void Update(float dt);
+		void Render();
+
+		HDC GetDeviceContext();
+		HGLRC GetRenderContext();
+
+		void ProcessEvent(Event* event);
+		void Resize(int nWidth, int nHeight);
+	private:
+		bool InitLoaders();
+		//wglext function pointers
+		PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
+		PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = nullptr;
+
+		HDC hDeviceContext;
+		HGLRC hRenderContext;
 	
-	bool MakeContextCurrent();
-	bool DestroyProxyContext();
+		Config* cfg;
 
-	bool InitilizeScene();
-	void Update(float dt);
-	void Render();
+		// ptr to events queue in application
+		std::queue<Event*>* pEvents;
 
-	HDC GetDeviceContext();
-	HGLRC GetRenderContext();
-
-private:
-	bool InitLoaders();
-	//wglext function pointers
-	PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
-	PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = nullptr;
-
-	HDC hDeviceContext;
-	HGLRC hRenderContext;
-	
-	Config* cfg;
-
-	// proxy setup 
-	HWND proxyHWND;
-	HDC proxyHDC;
-	HGLRC proxyRC;
-};
+		// proxy setup 
+		HWND proxyHWND;
+		HDC proxyHDC;
+		HGLRC proxyRC;
+	};
+}
 

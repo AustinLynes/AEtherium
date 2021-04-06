@@ -45,11 +45,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)vendor\include\;$(ProjectDir)src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)vendor\include\;$(ProjectDir)src\;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)vendor\include\;$(ProjectDir)src\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)vendor\include\;$(ProjectDir)src\;$(ProjectDir);$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -60,9 +62,9 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -76,31 +78,52 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\core\window\windows\Console.h" />
+    <ClInclude Include="vendor\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="src\core\UI\ImGuiUI.h" />
+    <ClInclude Include="vendor\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="src\core\events\Event.h" />
+    <ClInclude Include="vendor\imgui\imconfig.h" />
+    <ClInclude Include="vendor\imgui\imgui.h" />
+    <ClInclude Include="vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="src\utilities\Clock.h" />
     <ClInclude Include="src\core\debug\Debugger.h" />
     <ClInclude Include="src\app\Application.h" />
-    <ClInclude Include="src\core\window\BaseWindow.h" />
     <ClInclude Include="src\core\engine\Graphics.h" />
     <ClInclude Include="src\app\Config.h" />
     <ClInclude Include="src\resource.h" />
     <ClInclude Include="src\core\window\Window.h" />
+    <ClInclude Include="src\core\events\WindowEvents.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\window\windows\Console.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="src\core\UI\ImGuiUI.cpp" />
+    <ClCompile Include="vendor\imgui\imgui.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_tables.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\utilities\Clock.cpp" />
     <ClCompile Include="src\core\debug\Debugger.cpp" />
     <ClCompile Include="src\app\Application.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
-    <ClCompile Include="glad\glad.c" />
+    <ClCompile Include="vendor\glad\glad.c" />
     <ClCompile Include="src\core\engine\Graphics.cpp" />
     <ClCompile Include="src\core\window\Window.cpp" />
+    <ClCompile Include="src\core\events\WindowEvents.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="docs\WIN_API_MESSAGE_PUMP.txt" />

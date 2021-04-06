@@ -1,65 +1,46 @@
 #include "Application.h"
 
+#define SCR_WIDTH 1280
+#define SCR_HEIGHT 720
 
-Application::Application()
-{
-    window = new Window(&config);
-    gfx = new Graphics();
-}
-
-Application::~Application()
-{
-    delete window;
-    delete gfx;
-}
-
-bool Application::Init()
-{
-    if (!gfx->CreateDevice(&config)) {
-        Debugger::LogError("Could Not Create Device Context. Exiting.");
-        return false;
-    }
-    
-    if (!window->Create(L"Ætherium Engine")) {
-        return false;
-    }
-
-    if (!gfx->CreateContext(GetDC(window->GetWindowHandle()))) {
-        LOG_ERROR(L"Could Not Create Graphics Context.");
-        return false;
-    }
-
-    if (!gfx->MakeContextCurrent()) {
-        LOG_ERROR(L"Could Not Set Device Context to Current");
-        return false;
-    }
-
-    // SCENE MANAGEMENT
-    if (!gfx->InitilizeScene()) {
-        LOG_ERROR(L"Could Not Load Scene Information.");
-        return false;
-    }
+namespace Ætherium {
 
 
-    window->Show(SW_SHOWMAXIMIZED);
-    
-    return true;
-}
+	Application::Application() : mainWindow{ SCR_WIDTH, SCR_HEIGHT }
+	{
 
-int Application::Run()
-{
+		ImGui_ImplGlfw_InitForOpenGL(mainWindow.GetRawWindow(), true);
+		const char* glsl_version = "#version 460 core";
+		ImGui_ImplOpenGL3_Init(glsl_version);
+	}
 
-    while (true) {
+	Application::~Application()
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+	}
 
-        if(const auto eCode = window->ProcessMessages()) {
-            return *eCode;
-        }
+	void Application::Update()
+	{
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
 
-        // UPDATE 
-        gfx->Update(0.4f);
+		UI::WindowManager::Update();
 
-        // RENDER 
-        gfx->Render();
-    }
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			GLFWwindow* backup_current_context = glfwGetCurrentContext();
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+			glfwMakeContextCurrent(backup_current_context);
+		}
+
+
+
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		mainWindow.Draw();
+	}
+
 
 }

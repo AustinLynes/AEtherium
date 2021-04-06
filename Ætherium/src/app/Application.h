@@ -1,21 +1,29 @@
 #pragma once
 #include <core/window/Window.h>
 #include <core/engine/Graphics.h>
+#include <queue>
+#include <core/events/WindowEvents.h>
 
-class Application
-{
-public:
-	Application();
-	~Application();
+// IMGUI -------------
+#include <core/UI/ImGuiUI.h>
+///--------------
+namespace Ætherium {
 
-	bool Init();
-	int Run();
+	class Application : public UI::WindowManager
+	{
+	public:
+		Application();
+		~Application();
 
-private:
+		virtual void Update() override;
+		bool ShouldClose() { return mainWindow.ShouldClose(); }
+	private:
+		Graphics* gfx;
+		Window mainWindow;
+		Config config;
 
-	Window* window;
-	Graphics* gfx;
-
-	Config config;
-};
+		// for simplisity sake...
+		std::queue<Event*> events;
+	};
+}
 
